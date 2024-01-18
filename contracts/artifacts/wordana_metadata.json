@@ -1,14 +1,39 @@
 {
 	"compiler": {
-		"version": "0.8.20+commit.a1b79de6"
+		"version": "0.8.22+commit.4fc1097e"
 	},
 	"language": "Solidity",
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenAddress",
+						"type": "address"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_newOwner",
+						"type": "address"
+					}
+				],
+				"name": "changeOwner",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -24,13 +49,7 @@
 					}
 				],
 				"name": "createGameInstance",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -78,6 +97,44 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "stakeCoins",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_newTokenAddress",
+						"type": "address"
+					}
+				],
+				"name": "updateTokenAddres",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -108,11 +165,19 @@
 	},
 	"sources": {
 		"contracts/wordana.sol": {
-			"keccak256": "0x19ebbf410a17fc0a02826e426aa8cc4968163dca7717cd89ce0d446702dd11f4",
+			"keccak256": "0x88bfe82b6c204104830409ac7c2f906560c42fcfcf63e4d8f7924ba3d968369f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c333559931138ca707129badd41ab5e286905a15b0ad44a85d741038e560081d",
-				"dweb:/ipfs/QmQoU6ixuqH1KQLTtzAUQ6Ub6rFYvwFRD2ZfS1zFayeER3"
+				"bzz-raw://0136ece93f0967f871edb2c958863c06fbe0fd7303e8620d939b93e13bf4efb4",
+				"dweb:/ipfs/QmUGbH1iUvrGY5vKBYvD6jtynVjdtv9HrwT2i51uFzo7Fk"
+			]
+		},
+		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xee2337af2dc162a973b4be6d3f7c16f06298259e0af48c5470d2839bfa8a22f4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://30c476b4b2f405c1bb3f0bae15b006d129c80f1bfd9d0f2038160a3bb9745009",
+				"dweb:/ipfs/Qmb3VcuDufv6xbHeVgksC4tHpc5gKYVqBEwjEXW72XzSvN"
 			]
 		}
 	},
