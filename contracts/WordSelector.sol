@@ -2,8 +2,6 @@
 pragma solidity ^0.8.20;
 
 contract wordSelector {
-
-    address public owner;
     string[261] private words = [
         "there",
         "their",
@@ -268,19 +266,10 @@ contract wordSelector {
         "turns"
     ];
 
-    constructor(address ownerAddress) {
-        owner = ownerAddress;
-    }
 
-
-    function getWord (uint256 index) view  private returns (string memory) {
+    function getWord (uint256 index) view  public returns (string memory) {
         require(index < 261, "word index is out of range");
         return words[index];
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, 'you are not the owner of this contract');
-        _;
     }
 
     modifier newWordHas5Characters(string memory s) {
@@ -289,17 +278,13 @@ contract wordSelector {
         _;
     }
 
-    function replaceWord (uint256 _index, string memory _newWord) onlyOwner newWordHas5Characters(_newWord) public {
+    function replaceWord (uint256 _index, string memory _newWord) newWordHas5Characters(_newWord) public {
         require(_index < 261, "word index is out of range");
         words[_index] = _newWord;
     }
 
-    function generateRandomInt () private pure returns (uint256){
-        return 200;
-    }
-
     function pickWordAtRandom () public  view returns (string memory){
-        uint256 index = generateRandomInt();
+        uint256 index = 1;
         return getWord(index);
     }
 }
