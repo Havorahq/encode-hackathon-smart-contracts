@@ -85,8 +85,6 @@ contract wordanaMain {
     }
 
     function stakeCoins (uint amount) public returns (bool){
-        _wordanaToken.approve(address(this), amount);
-        _wordanaToken.transferFrom(msg.sender, address(this), amount);
         return true;
     }
 
