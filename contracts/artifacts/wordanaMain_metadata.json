@@ -113,13 +113,7 @@
 					}
 				],
 				"name": "changeOwner",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -249,19 +243,6 @@
 						"internalType": "string",
 						"name": "",
 						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "num",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -485,11 +466,11 @@
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0xf679dcf7196b939fa5e5fdd21c21517dcea58d69bf89aaa8fd614acb77d4ed3c",
+			"keccak256": "0x053a881fa6a9fe7b76ea28f82388171d9e87034eb5a091df2a02afa5411eadc3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://af1a7d460c3e6484a47302dfa37c21bb5e6bda802e07ba4b77502df221af262d",
-				"dweb:/ipfs/QmTxCcm3VNTWu4cAbYYrS1rNoogS8KDb9mNrzT9yGU6zs6"
+				"bzz-raw://f227a7410755ffb0796b7c7e61028a666f8b5a4e44a158aa81aa6145848a2164",
+				"dweb:/ipfs/Qmbu4BGpeNYmVEUTQa9VaHuAq1sbeuUZSnVXrifNRjs4Hj"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {

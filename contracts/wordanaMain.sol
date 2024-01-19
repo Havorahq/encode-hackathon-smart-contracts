@@ -36,15 +36,13 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     address wordanaTokenAddress;
     IERC20 _wordanaToken;
 
+    // params for random number generator (API3 QRNG)
     address public airnode;
     bytes32 public endpointIdUint256;
     bytes32 public endpointIdUint256Array;
     address public sponsorWallet;
-
     mapping (bytes32 => bool) public  expectingRequestWithIdToBeFulfilled;
     mapping (bytes32 => address) public  RequestIdsForGameInstance;
-
-    uint256 public num;
 
     event wordSelected(bytes32 indexed requestId, address player1Address);
     event player2HasEntered(address indexed player1Address, address indexed player2Address);
@@ -120,7 +118,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         return true;
     }
 
-    function changeOwner (address _newOwner) public onlyOwner returns (bool){
+    function changeOwner (address _newOwner) public onlyOwner {
         require(_newOwner != owner, "this new owner is the same as the old one");
         owner = _newOwner;
     }
@@ -147,8 +145,6 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
         // the index should be in the range of 0 - 260
         uint256 wordIndex = (randomNumber % (260 - 0 + 1)) + 0;
-
-        num = wordIndex;
 
         address currentPlayer1 = RequestIdsForGameInstance[requestId];
         games[currentPlayer1].wordToGuess = getWord(wordIndex);
