@@ -61,11 +61,6 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         _;
     }
 
-    modifier checkAllowance(uint amount) {
-        require(_wordanaToken.allowance(msg.sender, address(this)) >= amount, "Error: not approved");
-        _;
-    }
-
     function setRandomNumberRequestParameters(address _airnode,
      bytes32 _endpointIdUint256, 
      bytes32 _endpointIdUint256Array,
@@ -107,7 +102,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         return  games[msg.sender].wordToGuess;
     }
 
-    function stakeCoins (uint amount) public returns (bool){
+    function stakeCoins () pure public returns (bool){
         return true;
     }
 

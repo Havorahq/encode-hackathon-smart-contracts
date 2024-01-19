@@ -352,13 +352,7 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"name": "stakeCoins",
 				"outputs": [
 					{
@@ -367,7 +361,7 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
@@ -466,11 +460,11 @@
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0x053a881fa6a9fe7b76ea28f82388171d9e87034eb5a091df2a02afa5411eadc3",
+			"keccak256": "0x53420d4e10bf7907a30d5cf96bb7766ad40e25787c6c05199a4724ea5c4ad9c7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f227a7410755ffb0796b7c7e61028a666f8b5a4e44a158aa81aa6145848a2164",
-				"dweb:/ipfs/Qmbu4BGpeNYmVEUTQa9VaHuAq1sbeuUZSnVXrifNRjs4Hj"
+				"bzz-raw://e27c13cb259443ad2fc4d883aa3dd15aee96bcee2a3779f26157a444e36c4b39",
+				"dweb:/ipfs/Qmb3fGUPbz8TjpCD1cJQBHrMLVzmH9MZJMpThbenAGzxCz"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {
