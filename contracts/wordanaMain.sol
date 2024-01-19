@@ -21,13 +21,15 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     }
 
     struct GameInstance {
-        address player1;
+        address player1; // player1 address is the unique identifier for each game instance
         address player2;
         uint256 entryPrice; // the amount of wordana tokens each player has to stake to enter the game
         address winner;
         uint256 totalDeposit;
         GameStatus status;
         string wordToGuess;
+        uint256 player1Score;
+        uint256 player2Score;
     }
 
     address public owner;
@@ -44,7 +46,8 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
     uint256 public num;
 
-    event RequestUint256(bytes32 indexed requestId, address indexed );
+    event wordSelected(bytes32 indexed requestId, address player1Address);
+    event player2HasEntered(address indexed player1Address, address indexed player2Address);
 
     mapping(address=>GameInstance) private  games;  // a player can create only one game instance at a time
     GameInstance newGame;
@@ -92,14 +95,14 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     }
 
     // this function helps player2 enter the game he/she has been invited to
-    function enterGame (address _player1) public returns (bool){
+    function enterGame (address _player1) public{
         gameToEnter = games[_player1];
         require(gameToEnter.player2 == msg.sender, "You were not invited to this game");
 
         // deposit your own price.
         // update the game to be in progress
         gameToEnter.status = GameStatus.InProgress;
-        return true;
+        emit player2HasEntered(_player1, msg.sender);
     }
 
     function getGameInstance () public view returns (string memory){
@@ -120,7 +123,6 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     function changeOwner (address _newOwner) public onlyOwner returns (bool){
         require(_newOwner != owner, "this new owner is the same as the old one");
         owner = _newOwner;
-        return true;
     }
 
     function makeRequestUint256(address player1Address) private  {
@@ -148,10 +150,15 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
         num = wordIndex;
 
-        address currentGame = RequestIdsForGameInstance[requestId];
-        games[currentGame].wordToGuess = getWord(wordIndex);
+        address currentPlayer1 = RequestIdsForGameInstance[requestId];
+        games[currentPlayer1].wordToGuess = getWord(wordIndex);
 
         // emit an event here
+        emit wordSelected(requestId, currentPlayer1);
+    }
+
+    function checkword(string memory word, address player1Address, uint256 guessIndex) public {
+        // if the submitted word is equal to the word to guess, the address making the guess wins
     }
 
 }

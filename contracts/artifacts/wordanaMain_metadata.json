@@ -26,18 +26,37 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "player2Address",
+						"type": "address"
+					}
+				],
+				"name": "player2HasEntered",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "bytes32",
 						"name": "requestId",
 						"type": "bytes32"
 					},
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "address",
-						"name": "",
+						"name": "player1Address",
 						"type": "address"
 					}
 				],
-				"name": "RequestUint256",
+				"name": "wordSelected",
 				"type": "event"
 			},
 			{
@@ -107,6 +126,29 @@
 			{
 				"inputs": [
 					{
+						"internalType": "string",
+						"name": "word",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "guessIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "checkword",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "_player2",
 						"type": "address"
@@ -157,13 +199,7 @@
 					}
 				],
 				"name": "enterGame",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -449,11 +485,11 @@
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0x84ea9d84e113542aa8b62a4dc998afbaac37ad8b3ab256f86f53c0a5fa5bddf0",
+			"keccak256": "0xf679dcf7196b939fa5e5fdd21c21517dcea58d69bf89aaa8fd614acb77d4ed3c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://25878ce75cadf0e67cbe6d88b00f7c9f8e01eab78cac34925740aa02e2174e53",
-				"dweb:/ipfs/QmSZEXAQHE45XCbYiwCK3nLLpnVZLHHSB7N4HgiP5APoN5"
+				"bzz-raw://af1a7d460c3e6484a47302dfa37c21bb5e6bda802e07ba4b77502df221af262d",
+				"dweb:/ipfs/QmTxCcm3VNTWu4cAbYYrS1rNoogS8KDb9mNrzT9yGU6zs6"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {
