@@ -30,30 +30,39 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         string wordToGuess;
         uint256 player1Score;
         uint256 player2Score;
+        bool player1done;
+        bool player2done;
     }
 
     address public owner;
     address wordanaTokenAddress;
     IERC20 _wordanaToken;
 
+    string private appKey;  // the key used by the frontend app to access specific functions
+
+    uint256 public allowedNumberOfGuesses = 6;
+
     // params for random number generator (API3 QRNG)
     address public airnode;
     bytes32 public endpointIdUint256;
-    bytes32 public endpointIdUint256Array;
     address public sponsorWallet;
     mapping (bytes32 => bool) public  expectingRequestWithIdToBeFulfilled;
     mapping (bytes32 => address) public  RequestIdsForGameInstance;
 
     event wordSelected(bytes32 indexed requestId, address player1Address);
     event player2HasEntered(address indexed player1Address, address indexed player2Address);
+    event gameWon(address indexed winnerAddress, address indexed player1Address);
+    event playerScoreChanged(address indexed player1Address);
+    event gameConcluded(address indexed player1Address);
 
     mapping(address=>GameInstance) private  games;  // a player can create only one game instance at a time
     GameInstance newGame;
     GameInstance gameToEnter;
 
-    constructor(address _tokenAddress, address _airnodeRrp) RrpRequesterV0(_airnodeRrp){
+    constructor(address _tokenAddress, address _airnodeRrp, string memory _appkey) RrpRequesterV0(_airnodeRrp){
         owner = msg.sender;
         _wordanaToken = IERC20(_tokenAddress);
+        appKey = _appkey;
     }
 
     modifier onlyOwner() {
@@ -61,13 +70,16 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         _;
     }
 
+    modifier onlyApp(string memory _appkey) {
+        require(keccak256(abi.encodePacked(_appkey)) == keccak256(abi.encodePacked(appKey)), "App key is invalid");
+        _;
+    }
+
     function setRandomNumberRequestParameters(address _airnode,
      bytes32 _endpointIdUint256, 
-     bytes32 _endpointIdUint256Array,
      address _sponsorWallet) external onlyOwner {
         airnode = _airnode;
         endpointIdUint256 = _endpointIdUint256;
-        endpointIdUint256Array = _endpointIdUint256Array;
         sponsorWallet = _sponsorWallet;
     }
 
@@ -80,15 +92,19 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         newGame.entryPrice = _entryPrice;
         newGame.totalDeposit = _entryPrice;
         newGame.status = GameStatus.Pending;
+        newGame.player1done = false;
+        newGame.player2done = false;
+
         games[msg.sender] = newGame;
 
-        // make request to api3 qrng to generate random number for picking word to guess
+        // make request to api3 qrng to generate random number for picking word to guessWord
          makeRequestUint256(msg.sender);
         return ;
     }
 
     // this function helps player2 enter the game he/she has been invited to
     function enterGame (address _player1) public{
+        require(games[_player1].status != GameStatus.Concluded, "this game has been concluded");
         gameToEnter = games[_player1];
         require(gameToEnter.player2 == msg.sender, "You were not invited to this game");
 
@@ -146,8 +162,46 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         emit wordSelected(requestId, currentPlayer1);
     }
 
-    function checkword(string memory word, address player1Address, uint256 guessIndex) public {
-        // if the submitted word is equal to the word to guess, the address making the guess wins
+    // checkword
+    function getGameWord(address player1Address, string memory _appkey) public view onlyApp(_appkey)returns (string memory){
+        if (msg.sender != player1Address){
+            require(msg.sender == games[player1Address].player2, "you are not a participant in the game");
+        }
+        return games[player1Address].wordToGuess;
     }
 
+    // record score 
+    function recordGameScore(address player1Address, uint256 _newScore, string memory _appkey, bool currentPlayerIsdone) public onlyApp(_appkey){
+        require(games[player1Address].status == GameStatus.InProgress, "this game is no longer in progress");
+        if (msg.sender != player1Address){
+            require(msg.sender == games[player1Address].player2, "you are not a participant in the game");
+            games[player1Address].player2Score = _newScore;
+            games[player1Address].player2done = currentPlayerIsdone;
+            if (currentPlayerIsdone && games[player1Address].player1done){
+                concludeGame(player1Address);
+            }
+        } else{
+            games[player1Address].player1Score = _newScore;
+            games[player1Address].player1done = currentPlayerIsdone;
+            if (currentPlayerIsdone && games[player1Address].player2done){
+                concludeGame(player1Address);
+            }
+        }
+        emit playerScoreChanged(player1Address);
+    }
+    
+    function concludeGame (address player1Address) private {
+        games[player1Address].status = GameStatus.Concluded;
+        // calculate winner
+        if (games[player1Address].player1Score > games[player1Address].player2Score){
+            games[player1Address].winner = games[player1Address].player1;
+        } else if (games[player1Address].player1Score < games[player1Address].player2Score){
+            games[player1Address].winner = games[player1Address].player2;
+        }
+        emit gameConcluded(player1Address);
+    }
+
+    function getWinner (address player1Address) public view returns(address){
+        return games[player1Address].winner;
+    }
 }
