@@ -1,0 +1,13 @@
+{
+  "name": "Wordana_contract",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "hardhat": "^2.19.4"
+  },
+  "dependencies": {
+    "@api3/airnode-protocol": "^0.14.0",
+    "@openzeppelin/contracts": "^5.0.1"
+  }
+}
