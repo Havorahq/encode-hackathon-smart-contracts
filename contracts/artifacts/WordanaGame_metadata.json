@@ -21,6 +21,11 @@
 						"internalType": "address",
 						"name": "_airnodeRrp",
 						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -169,6 +174,25 @@
 					}
 				],
 				"name": "getWord",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					}
+				],
+				"name": "getWordOfTheDay",
 				"outputs": [
 					{
 						"internalType": "string",
@@ -362,19 +386,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "wordOfTheDay",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "wordanaToken",
 				"outputs": [
 					{
@@ -463,11 +474,11 @@
 			]
 		},
 		"contracts/SinglePlayer.sol": {
-			"keccak256": "0xea5f4d9763a851f8fd5218c09dfa65699db58791d616eccd2d0b3a10b31c0770",
+			"keccak256": "0xe1253155597e87f40cacbf31f3dad9bb51883b5a1b161f0a290cd409ff064b1a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f52ed6bc47b086da3874fac0ed04b14d4614748790a00383bb62b64b37597948",
-				"dweb:/ipfs/QmXUmm59hAYzimVWFmhfuLwba6GZAWkk1uoP27cKCntLm9"
+				"bzz-raw://17795fc0d69c343184e0404350510f966fc9c60a049b49c46b8d984e83a7774e",
+				"dweb:/ipfs/QmTdSqGmxiF5cRPAFDn7aUbKxBKqgBdkKYyiEBgGYeo327"
 			]
 		},
 		"contracts/WordSelector.sol": {

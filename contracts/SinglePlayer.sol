@@ -9,7 +9,7 @@ contract WordanaGame is RrpRequesterV0, wordSelector  {
     // Wordana token contract
     IERC20 public wordanaToken;
     address public owner;
-    string public wordOfTheDay;
+    string private wordOfTheDay;
     uint256 public tokensToEarn;
 
     // params for random number generator (API3 QRNG)
@@ -18,6 +18,7 @@ contract WordanaGame is RrpRequesterV0, wordSelector  {
     address public sponsorWallet;
     mapping (bytes32 => bool) public  expectingRequestWithIdToBeFulfilled;
     uint256 public sindex;
+    string private appkey;
 
 
     // Events
@@ -38,12 +39,18 @@ contract WordanaGame is RrpRequesterV0, wordSelector  {
         _;
     }
 
+    modifier onlyApp(string memory _appkey) {
+        require(keccak256(abi.encodePacked(_appkey)) == keccak256(abi.encodePacked(appkey)), "App key is invalid");
+        _;
+    }
+
     // Start the game and set the Wordana token contract
-    constructor(address _wordanaToken, uint256 _tokensToEarn, address _airnodeRrp) RrpRequesterV0(_airnodeRrp) {
+    constructor(address _wordanaToken, uint256 _tokensToEarn, address _airnodeRrp, string memory _appkey) RrpRequesterV0(_airnodeRrp) {
         require(_wordanaToken != address(0), "Invalid Wordana token address");
         owner = msg.sender;
         wordanaToken = IERC20(_wordanaToken);
         tokensToEarn = _tokensToEarn * 1000000000000000000 ;
+        appkey = _appkey;
         emit GameStarted(msg.sender);
     }
 
@@ -117,5 +124,9 @@ contract WordanaGame is RrpRequesterV0, wordSelector  {
         sindex = wordIndex;
         setWordOfTheDay(wordIndex);
         emit wordOfTheDaySet();
+    }
+
+    function getWordOfTheDay(string memory _appkey) public onlyApp(_appkey) view returns (string memory){
+        return wordOfTheDay;
     }
 }
