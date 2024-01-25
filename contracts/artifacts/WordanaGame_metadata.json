@@ -18,11 +18,6 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "address",
-						"name": "_airnodeRrp",
-						"type": "address"
-					},
-					{
 						"internalType": "string",
 						"name": "_appkey",
 						"type": "string"
@@ -108,64 +103,6 @@
 				"type": "event"
 			},
 			{
-				"inputs": [],
-				"name": "airnode",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "airnodeRrp",
-				"outputs": [
-					{
-						"internalType": "contract IAirnodeRrpV0",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "endpointIdUint256",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"name": "expectingRequestWithIdToBeFulfilled",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -224,13 +161,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "makeRequestUint256",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "owner",
 				"outputs": [
 					{
@@ -263,47 +193,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "requestId",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes",
-						"name": "data",
-						"type": "bytes"
-					}
-				],
-				"name": "selectWord",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_airnode",
-						"type": "address"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_endpointIdUint256",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "address",
-						"name": "_sponsorWallet",
-						"type": "address"
-					}
-				],
-				"name": "setRandomNumberRequestParameters",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint256",
 						"name": "_tokensToEarn",
 						"type": "uint256"
@@ -325,32 +214,6 @@
 				"name": "setWordOfTheDay",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "sindex",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "sponsorWallet",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -425,46 +288,6 @@
 		"remappings": []
 	},
 	"sources": {
-		"@api3/airnode-protocol/contracts/rrp/interfaces/IAirnodeRrpV0.sol": {
-			"keccak256": "0x5306571db1377e8c9dd8cb6e6c7a8deaa2d8ec540e7b2b229e9db5aa5da21277",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://3ff47c4fb89e55478d180e6a78049009ef57ba34688c1c454c12a7fd34c6df3a",
-				"dweb:/ipfs/QmQyKgg7mXgcyfnDiaTr5s7JDqFWQY6xbL6M5ajDiJGuwo"
-			]
-		},
-		"@api3/airnode-protocol/contracts/rrp/interfaces/IAuthorizationUtilsV0.sol": {
-			"keccak256": "0x597a40e9911628f6bc1d845c9ebe7c345833e8814caa5ce02a8597d3b4ee7975",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://61c3e2fcf29d5cbc12b86ba82109675d1291def1e26e25982ad12859fe3d3a76",
-				"dweb:/ipfs/QmPtfN5tmTgzGCXyxBQktuWAkxVWsg7Q7F8FB6YJveaDJq"
-			]
-		},
-		"@api3/airnode-protocol/contracts/rrp/interfaces/ITemplateUtilsV0.sol": {
-			"keccak256": "0x4212b264303a78b3c3ed0230cf23b7c3ca58bccec936eccd1d4924347b0fea47",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://eaf9f61c252264854cbdc409692f99d00327ad7ca9cd4bc17f3b0164e4bc8d76",
-				"dweb:/ipfs/QmYWvPeNGjND5kYPTMhU6RJRwgkHWqvYYoN24Lnbjndj8d"
-			]
-		},
-		"@api3/airnode-protocol/contracts/rrp/interfaces/IWithdrawalUtilsV0.sol": {
-			"keccak256": "0x732a3a2447150d8a8097042719ca1faf35e06cbfec364d1d6b17aae254cfd520",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://4647ec4eb4c54e4d4a0af973e8804fdd5df0f6c5aa4d70bbeede40ea40bd672b",
-				"dweb:/ipfs/QmSgVM8e6tAvwtWd5Tx9rewsBTpJwFo4J3A2vvQDZZvC9B"
-			]
-		},
-		"@api3/airnode-protocol/contracts/rrp/requesters/RrpRequesterV0.sol": {
-			"keccak256": "0x5a517e7b6e9a3bc7667a44866edbb6db81d8b0fde16325d1d49d1e64494568c8",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://8504ba05ab2a750ac2ae2bd2925a5fdd82219594b6881ba1d5016b7cde39a99d",
-				"dweb:/ipfs/Qmdk3ACLaQeeW3HNUte2s4HSTNpB3fGDZCfjpmUrDtPGsV"
-			]
-		},
 		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70",
 			"license": "MIT",
@@ -474,11 +297,11 @@
 			]
 		},
 		"contracts/SinglePlayer.sol": {
-			"keccak256": "0xe1253155597e87f40cacbf31f3dad9bb51883b5a1b161f0a290cd409ff064b1a",
+			"keccak256": "0x91a1b6ac25672ad20f72ec6103b00868375e8c1ffe08b6edaa644ef754202357",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://17795fc0d69c343184e0404350510f966fc9c60a049b49c46b8d984e83a7774e",
-				"dweb:/ipfs/QmTdSqGmxiF5cRPAFDn7aUbKxBKqgBdkKYyiEBgGYeo327"
+				"bzz-raw://40778745ff565849b6af372d8ef19e6d20dd53ea14ad79d82bf882086db017dd",
+				"dweb:/ipfs/QmVUAdMDjDuwuXm5qLVJCC8UVjDdqLidve33nj8eHpmN6X"
 			]
 		},
 		"contracts/WordSelector.sol": {
