@@ -445,7 +445,23 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "playerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requiredAmount",
+						"type": "uint256"
+					}
+				],
 				"name": "stakeCoins",
 				"outputs": [
 					{
@@ -454,7 +470,7 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -553,11 +569,11 @@
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0x228d20725bcb97a7aebee414b13bb40ec87966bd88eb4260154a9e082d1a4536",
+			"keccak256": "0x740cdad88bf190ade4f7821631a33ca2988a4147debf17ca1948919928bf2ea0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://26d847bf6409b3f625350e8acb8e599c2d6e68f9d66133f9ef0e8901f2335fa9",
-				"dweb:/ipfs/QmScqgfGJk2eh5ku9qKDn8QtkBoB9iLAgS5HAcps381w99"
+				"bzz-raw://71fd970ecdc16805985fc44a31d4f4f31a8907e8b1ef06dd8905c2072a88b45c",
+				"dweb:/ipfs/QmRBxiopettHE3eTeGsrJ8U1xLvk6pQ9N5g1X8urAhuieN"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {

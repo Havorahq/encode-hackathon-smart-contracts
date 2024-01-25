@@ -112,6 +112,9 @@ contract wordanaMain is RrpRequesterV0, wordSelector {
 
         games[msg.sender] = newGame;
 
+        // deposit entry price
+        stakeCoins(msg.sender, wordanaTokenAddress, _entryPrice);
+
         // make request to api3 qrng to generate random number for picking word to guessWord
         makeRequestUint256(msg.sender);
         return;
@@ -130,6 +133,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector {
         );
 
         // deposit your own price.
+        stakeCoins(msg.sender, wordanaTokenAddress, gameToEnter.entryPrice);
         // update the game to be in progress
         gameToEnter.status = GameStatus.InProgress;
         emit player2HasEntered(_player1, msg.sender);
@@ -143,7 +147,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector {
         address playerAddress,
         address tokenAddress,
         uint256 requiredAmount
-    ) public payable returns (bool) {
+    ) public returns (bool) {
         // Validate input parameters:
         require(playerAddress != address(0), "Invalid player address");
         require(tokenAddress != address(0), "Invalid token address");
@@ -157,12 +161,6 @@ contract wordanaMain is RrpRequesterV0, wordSelector {
 
         //  Transfer tokens from player to contract:
         token.transferFrom(playerAddress, address(this), requiredAmount);
-
-        // Store staked amount and player address:
-        stakedAmounts[playerAddress] = requiredAmount;
-
-        // Emit event:
-        emit Staked(playerAddress, tokenAddress, requiredAmount);
 
         return true;
     }
