@@ -332,19 +332,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "pickWordAtRandom",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -545,11 +532,11 @@
 			]
 		},
 		"contracts/WordSelector.sol": {
-			"keccak256": "0xae7110038324608918d92f08114f8eeaecb6966ac9a8e389dc6c54ca61ecb7a8",
+			"keccak256": "0xc120978b67c2f2122cf6ff787b3e0e42ae7365f9715c481cecb3bbf381b9c198",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://289e7aabd30489c63eb19be2c39309e010907c29dacfc074f84c9d279dac1071",
-				"dweb:/ipfs/Qme9UEXjhmYD9PqLgFhoMb2HmWieDzBpEevKuUt7c29uHu"
+				"bzz-raw://963745ce98a8d43d8c2008bdafd8f54d8d383257948fbcba9280fefdd1d569fc",
+				"dweb:/ipfs/QmbttJQ46vHiX4nNqEbNwwAGgcpBPfe1N7hXiimHb9gCjo"
 			]
 		},
 		"contracts/wordanaMain.sol": {
