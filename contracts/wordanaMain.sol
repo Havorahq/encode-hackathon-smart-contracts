@@ -34,8 +34,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector {
     }
 
     address public owner;
-    address wordanaTokenAddress;
-    IERC20 _wordanaToken;
+    address public wordanaTokenAddress;
 
     string private appKey; // the key used by the frontend app to access specific functions
 
@@ -70,7 +69,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector {
         string memory _appkey
     ) RrpRequesterV0(_airnodeRrp) {
         owner = msg.sender;
-        _wordanaToken = IERC20(_tokenAddress);
+        wordanaTokenAddress = _tokenAddress;
         appKey = _appkey;
     }
 
@@ -154,10 +153,6 @@ contract wordanaMain is RrpRequesterV0, wordSelector {
 
         // Ensure sufficient token balance:
         IERC20 token = IERC20(tokenAddress);
-        require(
-            token.allowance(playerAddress, address(this)) >= requiredAmount,
-            "Insufficient token allowance"
-        );
 
         //  Transfer tokens from player to contract:
         token.transferFrom(playerAddress, address(this), requiredAmount);

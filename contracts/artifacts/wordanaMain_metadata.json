@@ -491,6 +491,19 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "wordanaTokenAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -569,11 +582,11 @@
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0x740cdad88bf190ade4f7821631a33ca2988a4147debf17ca1948919928bf2ea0",
+			"keccak256": "0x2d21da202699d803538ccfc015118a2f7bc3e53b132f0e5e45ea81505f2b6d25",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://71fd970ecdc16805985fc44a31d4f4f31a8907e8b1ef06dd8905c2072a88b45c",
-				"dweb:/ipfs/QmRBxiopettHE3eTeGsrJ8U1xLvk6pQ9N5g1X8urAhuieN"
+				"bzz-raw://4a4d71ddb227223deaf0ba2a9b9edbf251d9ea15a0e410fee8b81c526c1cf8af",
+				"dweb:/ipfs/QmS9P9KZ99aobNXqthA9My8j1FXdAeNTyVALR9ccoZc1T5"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {

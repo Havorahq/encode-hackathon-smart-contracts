@@ -998,10 +998,11 @@
 			]
 		},
 		"contracts/wordana.sol": {
-			"keccak256": "0x2666eacd667ed4160d4f967c0c77b7e9d22d047febae1c193a0746417f24ff49",
+			"keccak256": "0xbd95fe42e0c8f368b89e80b8a044ad5e8282ec6462a0a8811e21a53fc91668aa",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://5a06fe6da6b3ce4538f9614295bcc4d6cfa00da53374be9594862865df1a3945",
-				"dweb:/ipfs/QmSQN6dxtTFPXPdPfx46wA4nL7jaHjAKazfgRzbVFCCpZc"
+				"bzz-raw://c88e9c850e880ff94b037dd39caa5269620a6f07f0e5c18dc475ddcb4fa746f2",
+				"dweb:/ipfs/QmfCFGt45ELHCnTCMuNdLeyqh9qn5DkUBJZDGkkXi71ZEV"
 			]
 		}
 	},
