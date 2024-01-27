@@ -36,33 +36,43 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
     address public owner;
     address wordanaTokenAddress;
-    IERC20 _wordanaToken;
+    IERC20 wordanaToken;
 
     string private appKey;  // the key used by the frontend app to access specific functions
 
     uint256 public allowedNumberOfGuesses = 6;
 
+    uint256[] randomNumArray;
+    uint256 requestIndex = 0;
+
     // params for random number generator (API3 QRNG)
     address public airnode;
     bytes32 public endpointIdUint256;
+    bytes32 public endpointIdUint256Array;
     address public sponsorWallet;
     mapping (bytes32 => bool) public  expectingRequestWithIdToBeFulfilled;
     mapping (bytes32 => address) public  RequestIdsForGameInstance;
+
+    // single player game params
+    uint256 public tokensToEarn;
+    uint256 public randomNum;
 
     event wordSelected(bytes32 indexed requestId, address player1Address);
     event player2HasEntered(address indexed player1Address, address indexed player2Address);
     event gameWon(address indexed winnerAddress, address indexed player1Address);
     event playerScoreChanged(address indexed player1Address);
     event gameConcluded(address indexed player1Address);
+    event randomNumberForSinglePlayerGameProvided(uint256 indexed randomNumber);
 
     mapping(address=>GameInstance) private  games;  // a player can create only one game instance at a time
     GameInstance newGame;
     GameInstance gameToEnter;
 
-    constructor(address _tokenAddress, address _airnodeRrp, string memory _appkey) RrpRequesterV0(_airnodeRrp){
+    constructor(address _tokenAddress, address _airnodeRrp, string memory _appkey, uint256 _tokensToEarn) RrpRequesterV0(_airnodeRrp){
         owner = msg.sender;
-        _wordanaToken = IERC20(_tokenAddress);
+        wordanaToken = IERC20(_tokenAddress);
         appKey = _appkey;
+        tokensToEarn = _tokensToEarn * 1000000000000000000 ;
     }
 
     modifier onlyOwner() {
@@ -76,11 +86,12 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     }
 
     function setRandomNumberRequestParameters(address _airnode,
-     bytes32 _endpointIdUint256, 
+     bytes32 _endpointIdUint256, bytes32 _endpointIdUint256Array,
      address _sponsorWallet) external onlyOwner {
         airnode = _airnode;
         endpointIdUint256 = _endpointIdUint256;
         sponsorWallet = _sponsorWallet;
+        endpointIdUint256Array = _endpointIdUint256Array;
     }
 
     function createGameInstance (address _player2, uint256 _entryPrice) public {
@@ -203,5 +214,41 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
     function getWinner (address player1Address) public view returns(address){
         return games[player1Address].winner;
+    }
+
+    function getWordOfTheDay(string memory _appkey) public onlyApp(_appkey) returns (uint256) {
+        uint256 numToReturn = (randomNumArray[requestIndex] % (260 - 0 + 1)) + 0;
+        if (requestIndex < 199){
+            requestIndex = requestIndex + 1;
+        } else{
+            requestIndex = 0;
+        }
+        return numToReturn;
+    }
+
+    function singlePlayerCollectReward(string memory _appkey) public onlyApp(_appkey) {
+        uint256 tokensEarned = tokensToEarn;
+        wordanaToken.transfer(msg.sender, tokensEarned);
+    }
+
+    function requestRandomNumbers(uint256 size) public  onlyOwner {
+        bytes32 requestId = airnodeRrp.makeFullRequest(
+            airnode,
+            endpointIdUint256Array,
+            address(this),
+            sponsorWallet,
+            address(this),
+            this.storeRandomNumberArray.selector,
+            abi.encode(bytes32("1u"), bytes32("size"), size)
+        );
+
+        expectingRequestWithIdToBeFulfilled[requestId] = true;
+    }
+
+    function storeRandomNumberArray(bytes32 requestId, bytes calldata data) external onlyAirnodeRrp{
+        require(expectingRequestWithIdToBeFulfilled[requestId], "Request id unknown");
+        expectingRequestWithIdToBeFulfilled[requestId] = false;
+
+        randomNumArray = abi.decode(data, (uint256[]));
     }
 }
