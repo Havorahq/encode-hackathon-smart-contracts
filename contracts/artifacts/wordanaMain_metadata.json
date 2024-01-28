@@ -105,7 +105,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "randomNumberForSinglePlayerGameProvided",
+				"name": "randomNumberProvided",
 				"type": "event"
 			},
 			{
@@ -358,13 +358,7 @@
 					}
 				],
 				"name": "getWordOfTheDay",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -456,24 +450,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "requestId",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes",
-						"name": "data",
-						"type": "bytes"
-					}
-				],
-				"name": "selectWord",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "_airnode",
 						"type": "address"
@@ -526,7 +502,23 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "playerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requiredAmount",
+						"type": "uint256"
+					}
+				],
 				"name": "stakeCoins",
 				"outputs": [
 					{
@@ -535,7 +527,7 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -665,11 +657,11 @@
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0x1d7ba412eec134396e56860360162496f82269e9117235cbdf39c9918b3d3f46",
+			"keccak256": "0xa5447d45e3251ad36cc5c990c41330ba68c9b713dac982c6bd10a4da6714d7ff",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ff952bf1400f056d64e01cec65e8815767dd304af1065af7bebd9421351952d6",
-				"dweb:/ipfs/Qmc2ZebsSgZAWQcvsaebxtCpFxsdSE4wPDt1jbk3s2x7Lv"
+				"bzz-raw://c9f6aca234ba6170b9c3caaca5e26084d4355bac54e120bf07288984dbbe9ac6",
+				"dweb:/ipfs/QmZecHjD3ftmH9ZhChxfdDrZ9u6HRpHLeQDYYehKdPeBvA"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {
