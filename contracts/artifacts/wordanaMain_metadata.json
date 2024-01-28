@@ -21,6 +21,11 @@
 						"internalType": "string",
 						"name": "_appkey",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokensToEarn",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -88,6 +93,19 @@
 					}
 				],
 				"name": "playerScoreChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "randomNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "randomNumberProvided",
 				"type": "event"
 			},
 			{
@@ -212,6 +230,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "endpointIdUint256Array",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -319,6 +350,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					}
+				],
+				"name": "getWordOfTheDay",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -333,12 +377,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "pickWordAtRandom",
+				"name": "randomNum",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "uint256",
 						"name": "",
-						"type": "string"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -393,17 +437,12 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "requestId",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes",
-						"name": "data",
-						"type": "bytes"
+						"internalType": "uint256",
+						"name": "size",
+						"type": "uint256"
 					}
 				],
-				"name": "selectWord",
+				"name": "requestRandomNumbers",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -421,12 +460,30 @@
 						"type": "bytes32"
 					},
 					{
+						"internalType": "bytes32",
+						"name": "_endpointIdUint256Array",
+						"type": "bytes32"
+					},
+					{
 						"internalType": "address",
 						"name": "_sponsorWallet",
 						"type": "address"
 					}
 				],
 				"name": "setRandomNumberRequestParameters",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					}
+				],
+				"name": "singlePlayerCollectReward",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -445,7 +502,23 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "playerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requiredAmount",
+						"type": "uint256"
+					}
+				],
 				"name": "stakeCoins",
 				"outputs": [
 					{
@@ -454,7 +527,38 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "requestId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "storeRandomNumberArray",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tokensToEarn",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -545,19 +649,19 @@
 			]
 		},
 		"contracts/WordSelector.sol": {
-			"keccak256": "0xae7110038324608918d92f08114f8eeaecb6966ac9a8e389dc6c54ca61ecb7a8",
+			"keccak256": "0xc120978b67c2f2122cf6ff787b3e0e42ae7365f9715c481cecb3bbf381b9c198",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://289e7aabd30489c63eb19be2c39309e010907c29dacfc074f84c9d279dac1071",
-				"dweb:/ipfs/Qme9UEXjhmYD9PqLgFhoMb2HmWieDzBpEevKuUt7c29uHu"
+				"bzz-raw://963745ce98a8d43d8c2008bdafd8f54d8d383257948fbcba9280fefdd1d569fc",
+				"dweb:/ipfs/QmbttJQ46vHiX4nNqEbNwwAGgcpBPfe1N7hXiimHb9gCjo"
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0x228d20725bcb97a7aebee414b13bb40ec87966bd88eb4260154a9e082d1a4536",
+			"keccak256": "0xa5447d45e3251ad36cc5c990c41330ba68c9b713dac982c6bd10a4da6714d7ff",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://26d847bf6409b3f625350e8acb8e599c2d6e68f9d66133f9ef0e8901f2335fa9",
-				"dweb:/ipfs/QmScqgfGJk2eh5ku9qKDn8QtkBoB9iLAgS5HAcps381w99"
+				"bzz-raw://c9f6aca234ba6170b9c3caaca5e26084d4355bac54e120bf07288984dbbe9ac6",
+				"dweb:/ipfs/QmZecHjD3ftmH9ZhChxfdDrZ9u6HRpHLeQDYYehKdPeBvA"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {

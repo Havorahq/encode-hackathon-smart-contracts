@@ -36,33 +36,44 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
     address public owner;
     address wordanaTokenAddress;
-    IERC20 _wordanaToken;
+    IERC20 wordanaToken;
 
     string private appKey;  // the key used by the frontend app to access specific functions
 
     uint256 public allowedNumberOfGuesses = 6;
 
+    uint256[] randomNumArray;
+    uint256 requestIndex = 0;
+
     // params for random number generator (API3 QRNG)
     address public airnode;
     bytes32 public endpointIdUint256;
+    bytes32 public endpointIdUint256Array;
     address public sponsorWallet;
     mapping (bytes32 => bool) public  expectingRequestWithIdToBeFulfilled;
     mapping (bytes32 => address) public  RequestIdsForGameInstance;
+
+    // single player game params
+    uint256 public tokensToEarn;
+    uint256 public randomNum;
 
     event wordSelected(bytes32 indexed requestId, address player1Address);
     event player2HasEntered(address indexed player1Address, address indexed player2Address);
     event gameWon(address indexed winnerAddress, address indexed player1Address);
     event playerScoreChanged(address indexed player1Address);
     event gameConcluded(address indexed player1Address);
+    event randomNumberProvided(uint256 indexed randomNumber);
 
     mapping(address=>GameInstance) private  games;  // a player can create only one game instance at a time
     GameInstance newGame;
     GameInstance gameToEnter;
 
-    constructor(address _tokenAddress, address _airnodeRrp, string memory _appkey) RrpRequesterV0(_airnodeRrp){
+    constructor(address _tokenAddress, address _airnodeRrp, string memory _appkey, uint256 _tokensToEarn) RrpRequesterV0(_airnodeRrp){
         owner = msg.sender;
-        _wordanaToken = IERC20(_tokenAddress);
+        wordanaToken = IERC20(_tokenAddress);
         appKey = _appkey;
+        tokensToEarn = _tokensToEarn * 1000000000000000000 ;
+        wordanaTokenAddress = _tokenAddress;
     }
 
     modifier onlyOwner() {
@@ -76,11 +87,12 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     }
 
     function setRandomNumberRequestParameters(address _airnode,
-     bytes32 _endpointIdUint256, 
+     bytes32 _endpointIdUint256, bytes32 _endpointIdUint256Array,
      address _sponsorWallet) external onlyOwner {
         airnode = _airnode;
         endpointIdUint256 = _endpointIdUint256;
         sponsorWallet = _sponsorWallet;
+        endpointIdUint256Array = _endpointIdUint256Array;
     }
 
     function createGameInstance (address _player2, uint256 _entryPrice) public {
@@ -94,11 +106,9 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         newGame.status = GameStatus.Pending;
         newGame.player1done = false;
         newGame.player2done = false;
-
         games[msg.sender] = newGame;
-
-        // make request to api3 qrng to generate random number for picking word to guessWord
-         makeRequestUint256(msg.sender);
+        stakeCoins(msg.sender, wordanaTokenAddress, _entryPrice);
+        selectWord(msg.sender);
         return ;
     }
 
@@ -109,6 +119,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         require(gameToEnter.player2 == msg.sender, "You were not invited to this game");
 
         // deposit your own price.
+        stakeCoins(msg.sender, wordanaTokenAddress, gameToEnter.entryPrice);
         // update the game to be in progress
         gameToEnter.status = GameStatus.InProgress;
         emit player2HasEntered(_player1, msg.sender);
@@ -118,7 +129,27 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         return  games[msg.sender].wordToGuess;
     }
 
-    function stakeCoins () pure public returns (bool){
+     function stakeCoins(
+        address playerAddress,
+        address tokenAddress,
+        uint256 requiredAmount
+    ) public returns (bool) {
+        // Validate input parameters:
+        require(playerAddress != address(0), "Invalid player address");
+        require(tokenAddress != address(0), "Invalid token address");
+
+        // Ensure sufficient token balance:
+        IERC20 token = IERC20(tokenAddress);
+        require(
+            token.allowance(playerAddress, address(this)) >= requiredAmount,
+            "Insufficient token allowance"
+        );
+
+        require(token.balanceOf(playerAddress) >= requiredAmount, "Insufficient balance");
+
+        //  Transfer tokens from player to contract:
+        token.transferFrom(playerAddress, address(this), requiredAmount);
+
         return true;
     }
 
@@ -132,34 +163,14 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         owner = _newOwner;
     }
 
-    function makeRequestUint256(address player1Address) private  {
-        bytes32 requestId = airnodeRrp.makeFullRequest(
-            airnode,
-            endpointIdUint256,
-            address(this),
-            sponsorWallet,
-            address(this),
-            this.selectWord.selector,
-            ""
-        );
-
-        expectingRequestWithIdToBeFulfilled[requestId] = true;
-        RequestIdsForGameInstance[requestId] = player1Address;
-    }
-
-    function selectWord(bytes32 requestId, bytes calldata data) external onlyAirnodeRrp {
-        require(expectingRequestWithIdToBeFulfilled[requestId], "Request id unknown");
-        expectingRequestWithIdToBeFulfilled[requestId] = false;
-        uint256 randomNumber = abi.decode(data, (uint256));
-
-        // the index should be in the range of 0 - 260
-        uint256 wordIndex = (randomNumber % (260 - 0 + 1)) + 0;
-
-        address currentPlayer1 = RequestIdsForGameInstance[requestId];
+    function selectWord(address currentPlayer1) private {
+        uint256 wordIndex = (randomNumArray[requestIndex] % (260 - 0 + 1)) + 0;
         games[currentPlayer1].wordToGuess = getWord(wordIndex);
-
-        // emit an event here
-        emit wordSelected(requestId, currentPlayer1);
+        if (requestIndex < 199){
+            requestIndex = requestIndex + 1;
+        } else{
+            requestIndex = 0;
+        }
     }
 
     // checkword
@@ -203,5 +214,41 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
     function getWinner (address player1Address) public view returns(address){
         return games[player1Address].winner;
+    }
+
+    function getWordOfTheDay(string memory _appkey) public onlyApp(_appkey) {
+        uint256 numToReturn = (randomNumArray[requestIndex] % (260 - 0 + 1)) + 0;
+        if (requestIndex < 199){
+            requestIndex = requestIndex + 1;
+        } else{
+            requestIndex = 0;
+        }
+        emit randomNumberProvided(numToReturn);
+    }
+
+    function singlePlayerCollectReward(string memory _appkey) public onlyApp(_appkey) {
+        uint256 tokensEarned = tokensToEarn;
+        wordanaToken.transfer(msg.sender, tokensEarned);
+    }
+
+    function requestRandomNumbers(uint256 size) public  onlyOwner {
+        bytes32 requestId = airnodeRrp.makeFullRequest(
+            airnode,
+            endpointIdUint256Array,
+            address(this),
+            sponsorWallet,
+            address(this),
+            this.storeRandomNumberArray.selector,
+            abi.encode(bytes32("1u"), bytes32("size"), size)
+        );
+
+        expectingRequestWithIdToBeFulfilled[requestId] = true;
+    }
+
+    function storeRandomNumberArray(bytes32 requestId, bytes calldata data) external onlyAirnodeRrp{
+        require(expectingRequestWithIdToBeFulfilled[requestId], "Request id unknown");
+        expectingRequestWithIdToBeFulfilled[requestId] = false;
+
+        randomNumArray = abi.decode(data, (uint256[]));
     }
 }

@@ -282,9 +282,4 @@ contract wordSelector {
         require(_index < 261, "word index is out of range");
         words[_index] = _newWord;
     }
-
-    function pickWordAtRandom () public  view returns (string memory){
-        uint256 index = 1;
-        return getWord(index);
-    }
 }
