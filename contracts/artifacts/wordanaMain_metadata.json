@@ -16,10 +16,52 @@
 						"internalType": "address",
 						"name": "_airnodeRrp",
 						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokensToEarn",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					}
+				],
+				"name": "gameConcluded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "winnerAddress",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					}
+				],
+				"name": "gameWon",
+				"type": "event"
 			},
 			{
 				"anonymous": false,
@@ -38,6 +80,32 @@
 					}
 				],
 				"name": "player2HasEntered",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					}
+				],
+				"name": "playerScoreChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "randomNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "randomNumberProvided",
 				"type": "event"
 			},
 			{
@@ -105,6 +173,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "allowedNumberOfGuesses",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -113,29 +194,6 @@
 					}
 				],
 				"name": "changeOwner",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "word",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "player1Address",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "guessIndex",
-						"type": "uint256"
-					}
-				],
-				"name": "checkword",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -232,6 +290,49 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					}
+				],
+				"name": "getGameWord",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					}
+				],
+				"name": "getWinner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "index",
 						"type": "uint256"
@@ -249,6 +350,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					}
+				],
+				"name": "getWordOfTheDay",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -263,15 +377,43 @@
 			},
 			{
 				"inputs": [],
-				"name": "pickWordAtRandom",
+				"name": "randomNum",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "uint256",
 						"name": "",
-						"type": "string"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_newScore",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "currentPlayerIsdone",
+						"type": "bool"
+					}
+				],
+				"name": "recordGameScore",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -295,17 +437,12 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "requestId",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes",
-						"name": "data",
-						"type": "bytes"
+						"internalType": "uint256",
+						"name": "size",
+						"type": "uint256"
 					}
 				],
-				"name": "selectWord",
+				"name": "requestRandomNumbers",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -339,6 +476,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					}
+				],
+				"name": "singlePlayerCollectReward",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "sponsorWallet",
 				"outputs": [
@@ -354,8 +504,18 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "playerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenAddress",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "requiredAmount",
 						"type": "uint256"
 					}
 				],
@@ -368,6 +528,37 @@
 					}
 				],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "requestId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "storeRandomNumberArray",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tokensToEarn",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -458,19 +649,19 @@
 			]
 		},
 		"contracts/WordSelector.sol": {
-			"keccak256": "0xae7110038324608918d92f08114f8eeaecb6966ac9a8e389dc6c54ca61ecb7a8",
+			"keccak256": "0xc120978b67c2f2122cf6ff787b3e0e42ae7365f9715c481cecb3bbf381b9c198",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://289e7aabd30489c63eb19be2c39309e010907c29dacfc074f84c9d279dac1071",
-				"dweb:/ipfs/Qme9UEXjhmYD9PqLgFhoMb2HmWieDzBpEevKuUt7c29uHu"
+				"bzz-raw://963745ce98a8d43d8c2008bdafd8f54d8d383257948fbcba9280fefdd1d569fc",
+				"dweb:/ipfs/QmbttJQ46vHiX4nNqEbNwwAGgcpBPfe1N7hXiimHb9gCjo"
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0x053a881fa6a9fe7b76ea28f82388171d9e87034eb5a091df2a02afa5411eadc3",
+			"keccak256": "0xa5447d45e3251ad36cc5c990c41330ba68c9b713dac982c6bd10a4da6714d7ff",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f227a7410755ffb0796b7c7e61028a666f8b5a4e44a158aa81aa6145848a2164",
-				"dweb:/ipfs/Qmbu4BGpeNYmVEUTQa9VaHuAq1sbeuUZSnVXrifNRjs4Hj"
+				"bzz-raw://c9f6aca234ba6170b9c3caaca5e26084d4355bac54e120bf07288984dbbe9ac6",
+				"dweb:/ipfs/QmZecHjD3ftmH9ZhChxfdDrZ9u6HRpHLeQDYYehKdPeBvA"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {
