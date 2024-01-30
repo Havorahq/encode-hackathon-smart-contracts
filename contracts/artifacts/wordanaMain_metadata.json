@@ -41,7 +41,20 @@
 						"type": "address"
 					}
 				],
-				"name": "gameConcluded",
+				"name": "drawRefund",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					}
+				],
+				"name": "gameDrawn",
 				"type": "event"
 			},
 			{
@@ -69,6 +82,19 @@
 					{
 						"indexed": true,
 						"internalType": "address",
+						"name": "playerAddress",
+						"type": "address"
+					}
+				],
+				"name": "multiplayerRewardClaimed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
 						"name": "player1Address",
 						"type": "address"
 					},
@@ -77,6 +103,12 @@
 						"internalType": "address",
 						"name": "player2Address",
 						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "wordToGuess",
+						"type": "uint256"
 					}
 				],
 				"name": "player2HasEntered",
@@ -113,6 +145,45 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "address",
+						"name": "playerAddress",
+						"type": "address"
+					}
+				],
+				"name": "singlePlayerRewardCollected",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "wordOfTheDay",
+						"type": "string"
+					}
+				],
+				"name": "wordOfTheDayReturned",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "winner",
+						"type": "address"
+					}
+				],
+				"name": "wordOfTheDayRewardCollected",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "bytes32",
 						"name": "requestId",
 						"type": "bytes32"
@@ -141,6 +212,25 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "XP",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -194,6 +284,19 @@
 					}
 				],
 				"name": "changeOwner",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					}
+				],
+				"name": "collectRewardForTheDay",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -279,33 +382,9 @@
 				"name": "getGameInstance",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "uint256",
 						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "player1Address",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "_appkey",
-						"type": "string"
-					}
-				],
-				"name": "getGameWord",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -357,8 +436,27 @@
 						"type": "string"
 					}
 				],
-				"name": "getWordOfTheDay",
+				"name": "getWordForSinglePlayer",
 				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_appkey",
+						"type": "string"
+					}
+				],
+				"name": "getWordOfTheDay",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -397,21 +495,29 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_newScore",
+						"name": "_guessIndex",
 						"type": "uint256"
 					},
 					{
 						"internalType": "string",
 						"name": "_appkey",
 						"type": "string"
-					},
-					{
-						"internalType": "bool",
-						"name": "currentPlayerIsdone",
-						"type": "bool"
 					}
 				],
-				"name": "recordGameScore",
+				"name": "recordGame",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					}
+				],
+				"name": "refundForDraw",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -471,6 +577,26 @@
 					}
 				],
 				"name": "setRandomNumberRequestParameters",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newEarning",
+						"type": "uint256"
+					}
+				],
+				"name": "setTokensToBeEarned",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "setWordOfTheDay",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -569,7 +695,7 @@
 						"type": "address"
 					}
 				],
-				"name": "updateTokenAddres",
+				"name": "updateTokenAddress",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -577,6 +703,19 @@
 						"type": "bool"
 					}
 				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "player1Address",
+						"type": "address"
+					}
+				],
+				"name": "winnerClaimReward",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
@@ -657,11 +796,11 @@
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0xa5447d45e3251ad36cc5c990c41330ba68c9b713dac982c6bd10a4da6714d7ff",
+			"keccak256": "0x2efe0f49db31c0af939b1fbabfd1b2bcb3a8e69f474d9804f0c06c9a1c9680e7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c9f6aca234ba6170b9c3caaca5e26084d4355bac54e120bf07288984dbbe9ac6",
-				"dweb:/ipfs/QmZecHjD3ftmH9ZhChxfdDrZ9u6HRpHLeQDYYehKdPeBvA"
+				"bzz-raw://4e99ace0ec5e3981be2ced0dc6fa26b4c1de980c72e9f745390b06dde3223e76",
+				"dweb:/ipfs/QmTEtqKK2ZoVjdMATnsnbBHte7B8Edor4gtvdJcR7Paz3P"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {

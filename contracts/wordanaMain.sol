@@ -25,18 +25,21 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         address player2;
         uint256 entryPrice; // the amount of wordana tokens each player has to stake to enter the game
         address winner;
-        uint256 totalDeposit;
         GameStatus status;
-        string wordToGuess;
-        uint256 player1Score;
-        uint256 player2Score;
+        uint256 wordToGuess;
+        uint256 player1GuessIndex;
+        uint256 player2GuessIndex;
         bool player1done;
         bool player2done;
+        bool isDraw;
+        bool prizeCollected;
     }
 
     address public owner;
     address wordanaTokenAddress;
     IERC20 wordanaToken;
+
+    string wordOfTheDay;
 
     string private appKey;  // the key used by the frontend app to access specific functions
 
@@ -57,12 +60,20 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     uint256 public tokensToEarn;
     uint256 public randomNum;
 
+    mapping (address => uint256) public XP;
+    mapping (address => string) wordOfTheDayWinners;
+
     event wordSelected(bytes32 indexed requestId, address player1Address);
-    event player2HasEntered(address indexed player1Address, address indexed player2Address);
+    event player2HasEntered(address indexed player1Address, address indexed player2Address, uint256 indexed wordToGuess);
     event gameWon(address indexed winnerAddress, address indexed player1Address);
     event playerScoreChanged(address indexed player1Address);
-    event gameConcluded(address indexed player1Address);
+    event gameDrawn(address indexed player1Address);
     event randomNumberProvided(uint256 indexed randomNumber);
+    event singlePlayerRewardCollected(address indexed playerAddress);
+    event multiplayerRewardClaimed(address indexed playerAddress);
+    event wordOfTheDayReturned(string indexed wordOfTheDay);
+    event wordOfTheDayRewardCollected(address indexed winner);
+    event drawRefund(address indexed player1Address);
 
     mapping(address=>GameInstance) private  games;  // a player can create only one game instance at a time
     GameInstance newGame;
@@ -96,13 +107,13 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     }
 
     function createGameInstance (address _player2, uint256 _entryPrice) public {
+        require(_player2 != address(0), "Invalid player address");
         require(_player2 != msg.sender, "You cannot invite yourself to a game");
         // player1 transfers the entry price in wordana tokens to contract address then
         // setup new game instance
         newGame.player1 = msg.sender;
         newGame.player2 = _player2;
         newGame.entryPrice = _entryPrice;
-        newGame.totalDeposit = _entryPrice;
         newGame.status = GameStatus.Pending;
         newGame.player1done = false;
         newGame.player2done = false;
@@ -115,17 +126,16 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     // this function helps player2 enter the game he/she has been invited to
     function enterGame (address _player1) public{
         require(games[_player1].status != GameStatus.Concluded, "this game has been concluded");
-        gameToEnter = games[_player1];
-        require(gameToEnter.player2 == msg.sender, "You were not invited to this game");
+        require(games[_player1].player2 == msg.sender, "You were not invited to this game");
 
         // deposit your own price.
         stakeCoins(msg.sender, wordanaTokenAddress, gameToEnter.entryPrice);
         // update the game to be in progress
-        gameToEnter.status = GameStatus.InProgress;
-        emit player2HasEntered(_player1, msg.sender);
+        games[_player1].status = GameStatus.InProgress;
+        emit player2HasEntered(_player1, msg.sender, games[_player1].wordToGuess);
     }
 
-    function getGameInstance () public view returns (string memory){
+    function getGameInstance () public view returns (uint256){
         return  games[msg.sender].wordToGuess;
     }
 
@@ -153,7 +163,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         return true;
     }
 
-    function updateTokenAddres (address _newTokenAddress) public onlyOwner returns (bool){
+    function updateTokenAddress (address _newTokenAddress) public onlyOwner returns (bool){
         wordanaTokenAddress = _newTokenAddress;
         return true;
     }
@@ -165,7 +175,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
     function selectWord(address currentPlayer1) private {
         uint256 wordIndex = (randomNumArray[requestIndex] % (260 - 0 + 1)) + 0;
-        games[currentPlayer1].wordToGuess = getWord(wordIndex);
+        games[currentPlayer1].wordToGuess = wordIndex;
         if (requestIndex < 199){
             requestIndex = requestIndex + 1;
         } else{
@@ -173,28 +183,20 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         }
     }
 
-    // checkword
-    function getGameWord(address player1Address, string memory _appkey) public view onlyApp(_appkey)returns (string memory){
-        if (msg.sender != player1Address){
-            require(msg.sender == games[player1Address].player2, "you are not a participant in the game");
-        }
-        return games[player1Address].wordToGuess;
-    }
-
     // record score 
-    function recordGameScore(address player1Address, uint256 _newScore, string memory _appkey, bool currentPlayerIsdone) public onlyApp(_appkey){
+    function recordGame(address player1Address, uint256 _guessIndex, string memory _appkey) public onlyApp(_appkey){
         require(games[player1Address].status == GameStatus.InProgress, "this game is no longer in progress");
         if (msg.sender != player1Address){
             require(msg.sender == games[player1Address].player2, "you are not a participant in the game");
-            games[player1Address].player2Score = _newScore;
-            games[player1Address].player2done = currentPlayerIsdone;
-            if (currentPlayerIsdone && games[player1Address].player1done){
+            games[player1Address].player2GuessIndex = _guessIndex;
+            games[player1Address].player2done = true;
+            if (games[player1Address].player1done){
                 concludeGame(player1Address);
             }
         } else{
-            games[player1Address].player1Score = _newScore;
-            games[player1Address].player1done = currentPlayerIsdone;
-            if (currentPlayerIsdone && games[player1Address].player2done){
+            games[player1Address].player1GuessIndex = _guessIndex;
+            games[player1Address].player1done = true;
+            if (games[player1Address].player2done){
                 concludeGame(player1Address);
             }
         }
@@ -203,20 +205,56 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     
     function concludeGame (address player1Address) private {
         games[player1Address].status = GameStatus.Concluded;
-        // calculate winner
-        if (games[player1Address].player1Score > games[player1Address].player2Score){
+        // determine winner
+        if (games[player1Address].player1GuessIndex < games[player1Address].player2GuessIndex){
             games[player1Address].winner = games[player1Address].player1;
-        } else if (games[player1Address].player1Score < games[player1Address].player2Score){
+            uint256 player1XP =  XP[games[player1Address].player1];
+            XP[games[player1Address].player1] = player1XP + 10;
+            uint256 player2XP =  XP[games[player1Address].player2];
+            XP[games[player1Address].player2] = player2XP + 3;
+            emit gameWon(games[player1Address].player1, player1Address);
+        } else if (games[player1Address].player1GuessIndex > games[player1Address].player2GuessIndex){
             games[player1Address].winner = games[player1Address].player2;
+            uint256 player1XP =  XP[games[player1Address].player1];
+            XP[games[player1Address].player1] = player1XP + 3;
+            uint256 player2XP =  XP[games[player1Address].player2];
+            XP[games[player1Address].player2] = player2XP + 10;
+            emit gameWon(games[player1Address].player2, player1Address);
+        } else {
+            games[player1Address].isDraw = true;
+            emit gameDrawn(player1Address);
         }
-        emit gameConcluded(player1Address);
+    }
+
+    function winnerClaimReward (address player1Address) public {
+        require(!games[player1Address].prizeCollected, "Prize has already been collected");
+        require(games[player1Address].winner == msg.sender, "you did not win this game");
+        wordanaToken.transfer(msg.sender, games[player1Address].entryPrice * 2);
+        games[player1Address].prizeCollected = true;
+        emit multiplayerRewardClaimed(msg.sender);
+    }
+
+    function refundForDraw (address player1Address) public {
+        // refund both players
+        require(!games[player1Address].prizeCollected, "Prize has already been collected");
+        require(games[player1Address].isDraw, "the game is not a draw");
+        uint256 tokensEarned = games[player1Address].entryPrice;
+        wordanaToken.transfer(games[player1Address].player1, tokensEarned);
+        wordanaToken.transfer(games[player1Address].player2, tokensEarned);
+        games[player1Address].prizeCollected = true;
+        // add XP
+        uint256 player1XP =  XP[games[player1Address].player1];
+        XP[games[player1Address].player1] = player1XP + 5;
+        uint256 player2XP =  XP[games[player1Address].player2];
+        XP[games[player1Address].player2] = player2XP + 5;
+        emit drawRefund(player1Address);
     }
 
     function getWinner (address player1Address) public view returns(address){
         return games[player1Address].winner;
     }
 
-    function getWordOfTheDay(string memory _appkey) public onlyApp(_appkey) {
+    function getWordForSinglePlayer(string memory _appkey) public onlyApp(_appkey) {
         uint256 numToReturn = (randomNumArray[requestIndex] % (260 - 0 + 1)) + 0;
         if (requestIndex < 199){
             requestIndex = requestIndex + 1;
@@ -229,6 +267,10 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     function singlePlayerCollectReward(string memory _appkey) public onlyApp(_appkey) {
         uint256 tokensEarned = tokensToEarn;
         wordanaToken.transfer(msg.sender, tokensEarned);
+        // add XP
+        uint256 currentXP =  XP[msg.sender];
+        XP[msg.sender] = currentXP + 3;
+        emit singlePlayerRewardCollected(msg.sender);
     }
 
     function requestRandomNumbers(uint256 size) public  onlyOwner {
@@ -250,5 +292,34 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         expectingRequestWithIdToBeFulfilled[requestId] = false;
 
         randomNumArray = abi.decode(data, (uint256[]));
+    }
+
+    function setWordOfTheDay() public onlyOwner{
+        uint256 wordIndex = (randomNumArray[requestIndex] % (260 - 0 + 1)) + 0;
+        wordOfTheDay = getWord(wordIndex);
+        if (requestIndex < 199){
+            requestIndex = requestIndex + 1;
+        } else{
+            requestIndex = 0;
+        }
+    }
+
+    function collectRewardForTheDay(string memory _appkey) public onlyApp(_appkey) {
+        require(keccak256(abi.encodePacked(wordOfTheDayWinners[msg.sender])) != keccak256(abi.encodePacked(wordOfTheDay)), "You have already collected a reward for guessing the word of the day");
+        uint256 tokensEarned = 1000 * 1000000000000000000;
+        wordanaToken.transfer(msg.sender, tokensEarned);
+        // add XP
+        uint256 currentXP =  XP[msg.sender];
+        XP[msg.sender] = currentXP + 5;
+        emit wordOfTheDayRewardCollected(msg.sender);
+    }
+
+    function getWordOfTheDay(string memory _appkey) public onlyApp(_appkey) returns (string memory){
+        emit wordOfTheDayReturned(wordOfTheDay);
+        return wordOfTheDay;
+    }
+
+    function setTokensToBeEarned(uint256 newEarning) public onlyOwner {
+        tokensToEarn = newEarning * 1000000000000000000;
     }
 }
