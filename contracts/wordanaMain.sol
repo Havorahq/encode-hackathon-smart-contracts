@@ -39,7 +39,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     address wordanaTokenAddress;
     IERC20 wordanaToken;
 
-    string wordOfTheDay;
+    uint256 wordOfTheDay;
 
     string private appKey;  // the key used by the frontend app to access specific functions
 
@@ -71,7 +71,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
     event randomNumberProvided(uint256 indexed randomNumber);
     event singlePlayerRewardCollected(address indexed playerAddress);
     event multiplayerRewardClaimed(address indexed playerAddress);
-    event wordOfTheDayReturned(string indexed wordOfTheDay);
+    event wordOfTheDayReturned(uint256 indexed wordOfTheDay);
     event wordOfTheDayRewardCollected(address indexed winner);
     event drawRefund(address indexed player1Address);
 
@@ -129,7 +129,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         require(games[_player1].player2 == msg.sender, "You were not invited to this game");
 
         // deposit your own price.
-        stakeCoins(msg.sender, wordanaTokenAddress, gameToEnter.entryPrice);
+        stakeCoins(msg.sender, wordanaTokenAddress, games[_player1].entryPrice);
         // update the game to be in progress
         games[_player1].status = GameStatus.InProgress;
         emit player2HasEntered(_player1, msg.sender, games[_player1].wordToGuess);
@@ -296,7 +296,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
 
     function setWordOfTheDay() public onlyOwner{
         uint256 wordIndex = (randomNumArray[requestIndex] % (260 - 0 + 1)) + 0;
-        wordOfTheDay = getWord(wordIndex);
+        wordOfTheDay = wordIndex;
         if (requestIndex < 199){
             requestIndex = requestIndex + 1;
         } else{
@@ -314,7 +314,7 @@ contract wordanaMain is RrpRequesterV0, wordSelector{
         emit wordOfTheDayRewardCollected(msg.sender);
     }
 
-    function getWordOfTheDay(string memory _appkey) public onlyApp(_appkey) returns (string memory){
+    function getWordOfTheDay(string memory _appkey) public onlyApp(_appkey) returns (uint256){
         emit wordOfTheDayReturned(wordOfTheDay);
         return wordOfTheDay;
     }

@@ -158,9 +158,9 @@
 				"inputs": [
 					{
 						"indexed": true,
-						"internalType": "string",
+						"internalType": "uint256",
 						"name": "wordOfTheDay",
-						"type": "string"
+						"type": "uint256"
 					}
 				],
 				"name": "wordOfTheDayReturned",
@@ -452,9 +452,9 @@
 				"name": "getWordOfTheDay",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "uint256",
 						"name": "",
-						"type": "string"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -796,11 +796,11 @@
 			]
 		},
 		"contracts/wordanaMain.sol": {
-			"keccak256": "0x2efe0f49db31c0af939b1fbabfd1b2bcb3a8e69f474d9804f0c06c9a1c9680e7",
+			"keccak256": "0xf87690fcb90fbec71b6a80eea6c08bd15dc9064d1a8dc43cab6a7903af552bb6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4e99ace0ec5e3981be2ced0dc6fa26b4c1de980c72e9f745390b06dde3223e76",
-				"dweb:/ipfs/QmTEtqKK2ZoVjdMATnsnbBHte7B8Edor4gtvdJcR7Paz3P"
+				"bzz-raw://ed2cbfa9d7836933d8bd6eab530fc275882861c7fb886fe42999f632e965822d",
+				"dweb:/ipfs/QmeuT2HgbUateY7YrHmX5qHEJTWE286PPkFwFFiaL1gPm2"
 			]
 		},
 		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {
